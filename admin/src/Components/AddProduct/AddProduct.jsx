@@ -11,10 +11,10 @@ const AddProduct = () => {
     image: "",
     category: "women",
     new_price: "",
-    old_price: ""
-  });
+    old_price: ""});
 
-  const imageHandler = (e) => {
+  const imageHandler = (e) => 
+  {
     setImage(e.target.files[0]);
   };
 
@@ -29,7 +29,7 @@ const AddProduct = () => {
 
     let formData = new FormData();
     formData.append('product', image);
-
+        //upload image to server
     await fetch('http://localhost:4000/upload', {
       method: 'POST',
       headers: {
@@ -39,7 +39,7 @@ const AddProduct = () => {
     })
     .then((resp) => resp.json())
     .then((data) => { responseData = data });
-
+      //uploading product data to server
     if (responseData.success) {
       product.image = responseData.image_url;
       console.log(product);
@@ -57,39 +57,7 @@ const AddProduct = () => {
     }
   };
   
-  /*const Add_All_Product = async () => {
-    try {
-      for (const product of all_products) {
-        const imageName = product.image.split('/').pop();
-        const newProduct = {
-          name: product.name,
-          image: `http://localhost:4000/images/${imageName}`,
-          // image: `http://localhost:4000/images/${product.image}`,
-          // image: product.image, // Assuming image URLs are correctly referenced
-          category: product.category,
-          new_price: product.new_price,
-          old_price: product.old_price
-        };
-
-        let response = await fetch('http://localhost:4000/addproduct', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newProduct),
-        });
-
-        let data = await response.json();
-        if (!data.success) {
-          console.error(`Failed to add product: ${product.name}`);
-        }
-      }
-      alert("All Products Added Successfully!");
-    } catch (error) {
-      console.error("Error adding products:", error);
-    }
-  };*/
-
+  
  
 
   return (

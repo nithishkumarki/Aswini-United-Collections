@@ -45,6 +45,12 @@ const ShopContextProvider=(props)=>
       
       const addToCart=(itemId)=>
       { 
+             if(!localStorage.getItem('auth-token'))
+             {
+                  alert("Please Login to add items to cart");
+                  return;     
+             }
+
             setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}));
             // console.log(cartItems);
             if(localStorage.getItem('auth-token'))
@@ -99,7 +105,7 @@ const ShopContextProvider=(props)=>
         }
 
         const getTotalCartItems=()=>
-      {
+       {
             let totalItems=0;
             for(const item in cartItems)
             {

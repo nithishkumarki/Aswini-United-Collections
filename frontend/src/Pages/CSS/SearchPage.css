@@ -1,0 +1,13 @@
+.search-page{
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+    min-height: 100vh;
+}
+.search-page-title h1{
+    font-size: 100x;
+}
+.search-page-input input{
+    border:none;
+    width: 100%;
+}
