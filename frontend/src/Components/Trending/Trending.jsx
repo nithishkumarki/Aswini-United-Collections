@@ -4,13 +4,13 @@ import {useState,useEffect} from 'react'
 import Item from '../Item/Item'
 
 const Trending = () => {
-
+   //treding cards
     const [trendingCards,setTrendingCards]=useState([]);
     
     useEffect(()=>{
         fetch('http://localhost:4000/newcollections').
         then((response)=>response.json()).
-        then((data)=>setTrendingCards(data))
+        then((data)=>setTrendingCards(data) )
     },[])
   return (
     <div className='trending'>
