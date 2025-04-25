@@ -5,7 +5,7 @@ import { ShopContext } from '../Context/ShopContext'
 import Item from '../Components/Item/Item'
 const SearchPage = () =>
 {
-
+     //hi
   const [searchText,setSearchText]=React.useState('');
   const {all_product}=React.useContext(ShopContext);
 
