@@ -4,7 +4,7 @@ import {useState,useEffect} from 'react'
 import Item from '../Item/Item'
 
 const Trending = () => {
-   //treding cards
+   //treding card s
     const [trendingCards,setTrendingCards]=useState([]);
     
     useEffect(()=>{
