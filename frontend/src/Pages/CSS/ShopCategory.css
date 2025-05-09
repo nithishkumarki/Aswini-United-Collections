@@ -106,11 +106,12 @@
         font-size: 16px;
     }
 }
+
 @media(max-width:800px)
 {
     .shopcategory-banner{
         width: 95%;
-    }
+    } 
     .shopcategory-products{
         width: 95%;
        
@@ -137,7 +138,5 @@
 }
 @media(max-width:500px)
 {
-    .shopcategory-products{
-        grid-template-columns: 1fr 1fr;
-    }
+   
 }

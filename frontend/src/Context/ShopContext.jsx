@@ -13,6 +13,7 @@ const getDefaultCart=()=>
 }
 
 
+
 const ShopContextProvider=(props)=>
 {
       
@@ -20,10 +21,14 @@ const ShopContextProvider=(props)=>
 
       const [cartItems,setCartItems]=useState(getDefaultCart());
 
+      const [userData,setUserDetails]=useState([]);
+
       useEffect(()=>{
          fetch('http://localhost:4000/allproducts')
          .then((response)=>response.json())
          .then((data)=>setAll_Product(data))
+
+
 
          if(localStorage.getItem('auth-token'))
          {
@@ -37,11 +42,26 @@ const ShopContextProvider=(props)=>
                   },
                   body:"",
             }).then((response)=>response.json())
-            .then((data)=>setCartItems(data));
+            .then((data)=>setCartItems(data)); 
+            
+            fetch('http://localhost:4000/getuser',{
+                  method:'POST',
+                  headers:{
+                        Accept:'application/form-data',
+                        'auth-token':`${localStorage.getItem('auth-token')}`,
+                        'Conten-Type':'application/json',
+
+                  },
+                  body:"",      
+            })
+            .then((response)=>response.json())
+            .then((data)=>setUserDetails(data));
+            
          }
+
       },[])
 
-      // console.log(cartItems);
+       console.log("got the user"+userData.name);
       
       const addToCart=(itemId)=>
       { 
@@ -50,8 +70,9 @@ const ShopContextProvider=(props)=>
                   alert("Please Login to add items to cart");
                   return;     
              }
-
+            
             setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}));
+
             // console.log(cartItems);
             if(localStorage.getItem('auth-token'))
             {
@@ -117,7 +138,7 @@ const ShopContextProvider=(props)=>
             return totalItems;
         }
 
-      const contextValue={getTotalCartItems,getTotalCartAmount,all_product,cartItems,addToCart,removeFromCart};
+      const contextValue={getTotalCartItems,getTotalCartAmount,all_product,cartItems,addToCart,removeFromCart,userData};
 
          
       return(

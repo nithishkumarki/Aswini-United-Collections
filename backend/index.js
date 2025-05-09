@@ -32,7 +32,6 @@ const upload=multer({storage:storageVariable})
 //creating upload endpoint for image
 app.use('/images',express.static('upload/images'))
 
-
 app.post('/upload',upload.single('product'),(req,res)=>{
     res.json({
         success:1,
@@ -52,6 +51,7 @@ const Product=mongoose.model("Product",{
     date:{type:Date,default:Date.now},
     available:{type:Boolean,default:true}
 })
+
 app.post('/addproduct', async (req, res) => {
     try {
       let products = await Product.find({});
@@ -103,6 +103,8 @@ const Users=mongoose.model('users',{
     cartData:{type:Object,},
     date:{type:Date,default:Date.now,}
 })
+
+
 
 //API for user registration
 app.post('/signup',async(req,res)=>
@@ -229,6 +231,13 @@ app.post('/getcart',fetchUser,async(req,res)=>{
     res.json(userData.cartData);
 });
 
+app.post('/getuser',fetchUser,async(req,res)=>{
+    console.log("GetUser");
+    let userData=await Users.findOne({_id:req.user.id})
+    console.log("User Data:", userData);
+    res.json(userData);
+})
+
 //creating endponit to remove cart data
 app.post('/removefromcart',fetchUser,async(req,res)=>{
     console.log("removed",req.body.itemId);
@@ -241,6 +250,95 @@ app.post('/removefromcart',fetchUser,async(req,res)=>{
     await Users.findOneAndUpdate({_id:req.user.id},{cartData:userData.cartData});
     res.send("Removed");
 })
+
+//Payment
+const Razorpay = require('razorpay');
+const crypto = require('crypto');
+const razorpay = new Razorpay({
+    key_id: 'rzp_test_OqKM3VAcZ1O5bK',
+    key_secret: 'EtC1e9X1cBsIPCQNxiNysxG8',
+  });
+
+  const Orders = mongoose.model("orders", {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true },
+    date: { type: Date, default: Date.now },
+    available: { type: Boolean, default: true }
+});
+
+app.post('/updateorder', async (req, res) => 
+{
+    const { name, email, address, city, state, pincode } = req.body;
+    const order = new Orders
+    ({
+        name,
+        email,
+        address,
+        city,
+        state,
+        pincode
+    });
+
+    await order.save();
+    res.json({ success: true });
+});
+
+app.get('/allOrders',async(req,res)=>
+{
+    try{
+        console.log("Fetching all orders...");
+        let allOrders=await Orders.find({});   
+        console.log(allOrders); 
+        res.send(allOrders);
+    }
+    catch(error)
+    {
+        console.log("Error fetching orders:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+   
+});
+
+app.post('/place-order',async(req,res)=>{
+    const {amount}=req.body;
+    const options
+    =
+    {
+        amount:amount*100,
+        currency:"INR", 
+        receipt:`receipt_order_${Math.floor(Math.random()*10000)}`,
+    }
+    try
+    {
+         const order=await Razorpay.orders.create(options);
+         res.json({success:true,order})
+    }
+    catch(err)
+    {
+        res.status(500).json({error:err.message});
+    }
+
+})
+app.delete('/deleteorder/:name', async (req, res) => {
+    try {
+        const orderName = req.params.name;
+        const deletedOrder = await Orders.findOneAndDelete({ name: orderName });
+
+        if (deletedOrder) {
+            res.json({ success: true, message: 'Order deleted successfully' });
+        } else {
+            res.status(404).json({ success: false, message: 'Order not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 
 app.listen(port,(error)=>{
        if(!error)

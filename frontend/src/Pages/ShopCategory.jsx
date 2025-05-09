@@ -27,9 +27,7 @@ const ShopCategory = (props) =>
           </div>
 
           <div className='shopcategory-indexSort-right'>
-          <div className='shopcategory-search'>
-           <input type="text" placeholder='search' onChange={InputChangeHandler} value={searchValue}/>
-          </div>
+        
           <div className="shopcategory-sort">
             Sort by <img src={dropdown_icon} alt="" />
           </div>         
@@ -39,7 +37,7 @@ const ShopCategory = (props) =>
 
         <div className='shopcategory-products'>      
         { 
-          searchValue===''? all_product.map((item,i)=>
+          all_product.map((item,i)=>
             {
                   if(props.category===item.category)
                   {
@@ -49,24 +47,15 @@ const ShopCategory = (props) =>
                     return null;
                   }
             }) 
-          : 
-          all_product.map((item,i)=>{
-            
-                  if(props.category===item.category && searchValue===item.name.substring(0,searchValue.length))
-                  {
-                    return<Item key={i} id={item.id} name={item.name} image={item.image} new_price={item.new_price} old_price={item.old_price}/>   
-                  }
-                  else{
-                    return null;
-                  }
-          })
+           
+       
         }
-
-
         </div>
+        
         <div className="shopcatgory-loadmore">
           Explore more
         </div>
+
     </div>
   )
 }

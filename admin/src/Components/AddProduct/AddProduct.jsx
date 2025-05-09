@@ -1,29 +1,32 @@
 import React, { useState } from 'react';
 import './AddProduct.css';
 import upload_area from '../../assets/upload_area.svg';
-
 import all_products from '../productAssets/all_product';
 
-const AddProduct = () => {
+const AddProduct = () => 
+{
   const [image, setImage] = useState(false);
-  const [productDetails, setProductDetails] = useState({
+  const [productDetails, setProductDetails] = 
+  useState({
     name: "",
     image: "",
     category: "women",
     new_price: "",
     old_price: ""});
-
+  
   const imageHandler = (e) => 
   {
     setImage(e.target.files[0]);
   };
 
-  const changeHandler = (e) => {
+  const changeHandler = (e) => 
+  {
     setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
   };
 
 
-  const Add_Product = async () => {
+  const Add_Product = async () => 
+{
     let responseData;
     let product = productDetails;
 
@@ -32,13 +35,15 @@ const AddProduct = () => {
         //upload image to server
     await fetch('http://localhost:4000/upload', {
       method: 'POST',
-      headers: {
+      headers: 
+      {
         Accept: 'application/json'
       },
       body: formData,
     })
     .then((resp) => resp.json())
     .then((data) => { responseData = data });
+
       //uploading product data to server
     if (responseData.success) {
       product.image = responseData.image_url;
@@ -51,10 +56,13 @@ const AddProduct = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(product),
-      }).then((resp) => resp.json()).then((data) => {
+      }).
+      then((resp) => resp.json()).
+      then((data) => {
         data.success ? alert("Product Added") : alert("Failed");
       });
     }
+
   };
   
   
@@ -62,12 +70,14 @@ const AddProduct = () => {
 
   return (
     <div className='add-product'>
+
       <div className="addproduct-itemfield">
         <p>Product title</p>
         <input value={productDetails.name} onChange={changeHandler} type="text" placeholder="Type Product here" name='name' />
       </div>
 
       <div className="addproduct-price">
+
         <div className="addproduct-itemfield">
           <p>Price</p>
           <input value={productDetails.old_price} onChange={changeHandler} type="text" placeholder="Type here" name='old_price' />
